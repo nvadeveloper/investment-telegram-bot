@@ -1,8 +1,9 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
 import { type Context, Markup, Telegraf, Telegram } from 'telegraf'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require('dotenv').config()
-console.log('process.env.BOT_TOKEN ', process.env.BOT_TOKEN)
+
+import express from 'express'
+import * as dotenv from 'dotenv'
+
+dotenv.config()
 const token: string = process.env.BOT_TOKEN ?? ''
 
 const telegram: Telegram = new Telegram(token)
@@ -55,4 +56,12 @@ process.once('SIGINT', () => {
 })
 process.once('SIGTERM', () => {
   bot.stop('SIGTERM')
+})
+
+const app = express()
+const port = 3000
+
+app.listen(port, () => {
+  console.log(`Dolphin app listening on port ${port}!`)
+  console.log('process.env.BOT_TOKEN ', process.env.BOT_TOKEN)
 })
