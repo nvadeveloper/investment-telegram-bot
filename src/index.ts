@@ -4,70 +4,49 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
+const CURRENCY = ['USDRUB_TOM', 'EURRUB_TOM', 'CNYRUB_TOM'];
+
 const token: string = process.env.BOT_TOKEN ?? '';
 const port: string = process.env.PORT ?? '';
 const url: string = process.env.URL ?? '';
 
-const telegram: Telegram = new Telegram(token);
+// const telegram: Telegram = new Telegram(token);
 
 const bot = new Telegraf<Context<any>>(token);
 
-const chatId: string = process.env.CHAT_ID ?? '';
-
-bot.start((ctx) => {
-    ctx.reply('Hello ' + ctx.from.first_name + '!');
-});
-
-bot.help((ctx) => {
-    ctx.reply('Send /start to receive a greeting');
-    ctx.reply('Send /keyboard to receive a message with a keyboard');
-    ctx.reply('Send /quit to stop the bot');
-});
-
-bot.command('quit', (ctx) => {
-    // Explicit usage
-    ctx.telegram.leaveChat(ctx.message.chat.id);
-
-    // Context shortcut
-    ctx.leaveChat();
-});
-
-bot.command('keyboard', (ctx) => {
-    ctx.reply(
-        'Keyboard',
-        Markup.inlineKeyboard([
-            Markup.button.callback('First option', 'first'),
-            Markup.button.callback('Second option', 'second'),
-        ]),
-    );
-});
-
-bot.on('text', (ctx) => {
-    ctx.reply('You choose the ' + (ctx.message.text === 'first' ? 'First' : 'Second') + ' Option!');
-
-    if (!(chatId.length === 0)) {
-        telegram.sendMessage(chatId, 'This message was sent without your interaction!');
-    }
-});
-
+const app = express();
 bot.launch();
 
-// Enable graceful stop
-process.once('SIGINT', () => {
-    bot.stop('SIGINT');
-});
-process.once('SIGTERM', () => {
-    bot.stop('SIGTERM');
-});
+const filterData = (data: any) => {
+    const array: any[] = [];
 
-const app = express();
+    data[1].securities.filter((item: any) => {
+        if (CURRENCY.includes(item.SHORTNAME)) {
+            array.push({ text: item.FACEUNIT, value: item.PREVPRICE });
+        }
+    });
+
+    return array;
+};
+
+const convertToText = (data: any) => {
+    const array: any[] = [];
+
+    data.map((item: any) => array.push(`${item.text} ${item.value}`));
+
+    return array;
+};
 
 app.listen(port, () => {
     console.log(`Dolphin app listening on port ${port}!`);
+
+    bot.on('text', async (ctx) => {
+        const data = await fetch(url).then((data) => data.json());
+
+        await ctx.reply(convertToText(filterData(data)).join('\n'));
+    });
 });
 
-app.get('/', async (req, res) => {
-    const data = await fetch(url) ;
-    console.log(data);
-    res.send("Hello!");
+app.get('/', (req, res) => {
+    res.send('Hello!');
 });
