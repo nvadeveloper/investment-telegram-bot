@@ -4,7 +4,15 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-const CURRENCY = ['USDRUB_TOM', 'EURRUB_TOM', 'CNYRUB_TOM'];
+const CURRENCY = [
+    'USDRUB_TOM',
+    'EURRUB_TOM',
+    'CNYRUB_TOM',
+    'TRYRUB_TOM',
+    'HKDRUB_TOM',
+    'KZTRUB_TOM',
+    'USDKZT_TOM',
+];
 
 const token: string = process.env.BOT_TOKEN ?? '';
 const port: string = process.env.PORT ?? '';
