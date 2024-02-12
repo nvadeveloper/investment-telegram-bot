@@ -1,6 +1,7 @@
 import { type Context, Markup, Telegraf, Telegram } from 'telegraf';
 import express from 'express';
 import * as dotenv from 'dotenv';
+import { СurrencyBackendType, СurrencyType } from './types';
 
 dotenv.config();
 
@@ -25,10 +26,10 @@ const bot = new Telegraf<Context<any>>(token);
 const app = express();
 bot.launch();
 
-const filterData = (data: any) => {
-    const array: any[] = [];
+const filterData = (data: СurrencyBackendType[]) => {
+    const array: СurrencyType[] = [];
 
-    data[1].securities.filter((item: any) => {
+    data.filter((item: СurrencyBackendType) => {
         if (CURRENCY.includes(item.SHORTNAME)) {
             array.push({ text: item.FACEUNIT, value: item.PREVPRICE });
         }
@@ -37,21 +38,19 @@ const filterData = (data: any) => {
     return array;
 };
 
-const convertToText = (data: any) => {
-    const array: any[] = [];
-
-    data.map((item: any) => array.push(`${item.text} ${item.value}`));
-
-    return array;
-};
+const convertToText = (data: СurrencyType[]) => data.map((item) => `${item.text} ${item.value}`);
 
 app.listen(port, () => {
     console.log(`Dolphin app listening on port ${port}!`);
 
+    bot.start(async (ctx) => {
+        await ctx.reply('Привет, ' + ctx.from.first_name + '!');
+    });
+
     bot.on('text', async (ctx) => {
         const data = await fetch(url).then((data) => data.json());
 
-        await ctx.reply(convertToText(filterData(data)).join('\n'));
+        await ctx.reply(convertToText(filterData(data[1].securities)).join('\n'));
     });
 });
 
