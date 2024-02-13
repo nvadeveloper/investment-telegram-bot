@@ -5,15 +5,14 @@ import { СurrencyBackendType, СurrencyType } from './types';
 
 dotenv.config();
 
-const CURRENCY = [
-    'USDRUB_TOM',
-    'EURRUB_TOM',
-    'CNYRUB_TOM',
-    'TRYRUB_TOM',
-    'HKDRUB_TOM',
-    'KZTRUB_TOM',
-    'USDKZT_TOM',
-];
+const CURRENCY_MAP = new Map<string, string>([
+    ['USD000UTSTOM', 'USD'],
+    ['EUR_RUB__TOM', 'EUR'],
+    ['CNYRUB_TOM', 'CNY'],
+    ['TRYRUB_TOM', 'TRY'],
+    ['HKDRUB_TOM', 'HKD'],
+    ['KZTRUB_TOM', 'KZT'],
+]);
 
 const token: string = process.env.BOT_TOKEN ?? '';
 const port: string = process.env.PORT ?? '';
@@ -30,8 +29,8 @@ const filterData = (data: СurrencyBackendType[]) => {
     const array: СurrencyType[] = [];
 
     data.filter((item: СurrencyBackendType) => {
-        if (CURRENCY.includes(item.SECID)) {
-            array.push({ text: item.SECID, value: item.LAST });
+        if (CURRENCY_MAP.get(item.SECID)) {
+            array.push({ text: CURRENCY_MAP.get(item.SECID) ?? '', value: item.LAST });
         }
     });
 
