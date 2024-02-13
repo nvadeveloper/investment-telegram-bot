@@ -30,8 +30,8 @@ const filterData = (data: СurrencyBackendType[]) => {
     const array: СurrencyType[] = [];
 
     data.filter((item: СurrencyBackendType) => {
-        if (CURRENCY.includes(item.SHORTNAME)) {
-            array.push({ text: item.FACEUNIT, value: item.PREVPRICE });
+        if (CURRENCY.includes(item.SECID)) {
+            array.push({ text: item.SECID, value: item.LAST });
         }
     });
 
@@ -50,7 +50,7 @@ app.listen(port, () => {
     bot.on('text', async (ctx) => {
         const data = await fetch(url).then((data) => data.json());
 
-        await ctx.reply(convertToText(filterData(data[1].securities)).join('\n'));
+        await ctx.reply(convertToText(filterData(data[1].marketdata)).join('\n'));
     });
 });
 

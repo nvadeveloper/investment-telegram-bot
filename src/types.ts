@@ -18,6 +18,7 @@ export type СurrencyBackendType = {
     CURRENCYID: string;
     LATNAME: string;
     LOTDIVIDER: number;
+    LAST: number;
 };
 
 export type СurrencyType = {
