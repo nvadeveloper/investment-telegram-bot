@@ -38,4 +38,5 @@ export type СurrencyBackendType = {
 export type СurrencyType = {
     text: string;
     value: number;
+    time: string;
 };

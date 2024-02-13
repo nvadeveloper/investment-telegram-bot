@@ -6,12 +6,12 @@ import { СurrencyBackendType, СurrencyType } from './types';
 dotenv.config();
 
 const CURRENCY_MAP = new Map<string, string>([
-    ['USD000UTSTOM', 'USD'],
-    ['EUR_RUB__TOM', 'EUR'],
-    ['CNYRUB_TOM', 'CNY'],
-    ['TRYRUB_TOM', 'TRY'],
-    ['HKDRUB_TOM', 'HKD'],
-    ['KZTRUB_TOM', 'KZT'],
+    ['USD000UTSTOM', '🇺🇸 USD'],
+    ['EUR_RUB__TOM', '🇪🇺 EUR'],
+    ['CNYRUB_TOM', '🇨🇳 CNY'],
+    ['TRYRUB_TOM', '🇹🇷 TRY'],
+    ['HKDRUB_TOM', '🇭🇰 HKD'],
+    ['KZTRUB_TOM', '🇵🇼 KZT'],
 ]);
 
 const token: string = process.env.BOT_TOKEN ?? '';
@@ -30,14 +30,19 @@ const filterData = (data: СurrencyBackendType[]) => {
 
     data.filter((item: СurrencyBackendType) => {
         if (CURRENCY_MAP.get(item.SECID)) {
-            array.push({ text: CURRENCY_MAP.get(item.SECID) ?? '', value: item.LAST });
+            array.push({
+                text: CURRENCY_MAP.get(item.SECID) ?? '',
+                value: item.LAST,
+                time: item.UPDATETIME,
+            });
         }
     });
 
     return array;
 };
 
-const convertToText = (data: СurrencyType[]) => data.map((item) => `${item.text} ${item.value}`);
+const convertToText = (data: СurrencyType[]) =>
+    data.map((item) => `${item.text} ${item.value}. Обновлено: ${item.time}`);
 
 app.listen(port, () => {
     console.log(`Dolphin app listening on port ${port}!`);
@@ -54,5 +59,5 @@ app.listen(port, () => {
 });
 
 app.get('/', (req, res) => {
-    res.send('Hello!');
+    res.send('Hello world!');
 });
