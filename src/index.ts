@@ -48,10 +48,15 @@ app.listen(port, () => {
     console.log(`Dolphin app listening on port ${port}!`);
 
     bot.start(async (ctx) => {
-        await ctx.reply('Привет, ' + ctx.from.first_name + '!');
+        await ctx.reply('Привет, ' + ctx.from.first_name + '!', {
+            ...Markup.inlineKeyboard([
+                Markup.button.callback('Курс валют', 'currency'),
+                Markup.button.callback('Курс валют', 'currency'),
+            ]),
+        });
     });
 
-    bot.on('text', async (ctx) => {
+    bot.action('currency', async (ctx) => {
         const data = await fetch(url).then((data) => data.json());
 
         await ctx.reply(convertToText(filterData(data[1].marketdata)).join('\n'));
