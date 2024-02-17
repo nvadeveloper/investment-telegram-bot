@@ -49,7 +49,7 @@ app.listen(port, () => {
 
     bot.start(async (ctx) => {
         await ctx.reply('Привет, ' + ctx.from.first_name + '!', {
-            ...Markup.inlineKeyboard([Markup.button.callback('Курс валют', 'currency')]),
+            ...Markup.inlineKeyboard([Markup.button.callback('Узнать курс валют', 'currency')]),
         });
     });
 
