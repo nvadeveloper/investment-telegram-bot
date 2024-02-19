@@ -1,11 +1,15 @@
-export function formatDate(date: number) {
-    var d = new Date(date),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
+export function getCurrentDate() {
+    const date = new Date();
 
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
-
-    return [year, month, day].join('-');
+    return `${
+        date.getMinutes() +
+        ':' +
+        date.getHours() +
+        ' ' +
+        date.getDay() +
+        '/' +
+        date.getMonth() +
+        '/' +
+        date.getFullYear()
+    }`;
 }
