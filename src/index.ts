@@ -2,8 +2,11 @@ import { type Context, Markup, Telegraf, Telegram } from 'telegraf';
 import express from 'express';
 import * as dotenv from 'dotenv';
 import { СurrencyBackendType, СurrencyType } from './types';
-
+import { Client } from '@notionhq/client';
 dotenv.config();
+
+const notion = new Client({ auth: process.env.NOTION_API_KEY });
+const databaseId = process.env.NOTION_DATABASE_ID;
 
 const CURRENCY_MAP = new Map<string, string>([
     ['USD000UTSTOM', '🇺🇸 USD'],
@@ -18,12 +21,47 @@ const token: string = process.env.BOT_TOKEN ?? '';
 const port: string = process.env.PORT ?? '';
 const url: string = process.env.URL ?? '';
 
-// const telegram: Telegram = new Telegram(token);
-
 const bot = new Telegraf<Context<any>>(token);
 
 const app = express();
 bot.launch();
+
+async function addToDatabase(databaseId: any, username: string, date: any) {
+    try {
+        const response = await notion.pages.create({
+            parent: {
+                database_id: databaseId,
+            },
+            properties: {
+                id: {
+                    type: 'title',
+                    title: [
+                        {
+                            type: 'text',
+                            text: {
+                                content: username,
+                            },
+                        },
+                    ],
+                },
+                date: {
+                    type: 'rich_text',
+                    rich_text: [
+                        {
+                            type: 'text',
+                            text: {
+                                content: String(Date.now()),
+                            },
+                        },
+                    ],
+                },
+            },
+        });
+        console.log(response);
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 const filterData = (data: СurrencyBackendType[]) => {
     const array: СurrencyType[] = [];
@@ -55,7 +93,7 @@ app.listen(port, () => {
 
     bot.action('currency', async (ctx) => {
         const data = await fetch(url).then((data) => data.json());
-
+        await addToDatabase(databaseId, String(ctx.from?.id), Date.now());
         await ctx.reply(convertToText(filterData(data[1].marketdata)).join('\n'), {
             ...Markup.inlineKeyboard([Markup.button.callback('Обновить курс валют', 'currency')]),
         });
