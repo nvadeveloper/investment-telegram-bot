@@ -3,6 +3,7 @@ import express from 'express';
 import * as dotenv from 'dotenv';
 import { СurrencyBackendType, СurrencyType } from './types';
 import { Client } from '@notionhq/client';
+import { formatDate } from './utils';
 dotenv.config();
 
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
@@ -50,7 +51,7 @@ async function addToDatabase(databaseId: any, username: string, date: any) {
                         {
                             type: 'text',
                             text: {
-                                content: String(Date.now()),
+                                content: formatDate(Date.now()),
                             },
                         },
                     ],
