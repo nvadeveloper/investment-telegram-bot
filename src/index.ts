@@ -56,6 +56,19 @@ async function addToDatabase(databaseId: any, username: string, date: any) {
                         },
                     ],
                 },
+                // email: {
+                //     type: 'email',
+                //     email: 'nik@nik.ru',
+                //     // type: 'email',
+                //     // email: [
+                //     //     {
+                //     //         type: 'email',
+                //     //         text: {
+                //     //             content: getCurrentDate(),
+                //     //         },
+                //     //     },
+                //     // ],
+                // },
             },
         });
         console.log(response);
@@ -85,20 +98,25 @@ const convertToText = (data: СurrencyType[]) =>
 
 app.listen(port, () => {
     console.log(`Dolphin app listening on port ${port}!`);
-
     bot.start(async (ctx) => {
-        await ctx.reply('Привет, ' + ctx.from.first_name + '!', {
-            ...Markup.inlineKeyboard([Markup.button.callback('Узнать курс валют', 'currency')]),
-        });
+        await ctx.reply('👋');
+        await ctx.reply('Привет, ' + ctx.from.first_name + '!');
+        await ctx.reply('Заполни анкету, сначала введи имя');
     });
 
-    bot.action('currency', async (ctx) => {
-        const data = await fetch(url).then((data) => data.json());
-        await addToDatabase(databaseId, String(ctx.from?.id), Date.now());
-        await ctx.reply(convertToText(filterData(data[1].marketdata)).join('\n'), {
-            ...Markup.inlineKeyboard([Markup.button.callback('Обновить курс валют', 'currency')]),
-        });
-    });
+    // bot.start(async (ctx) => {
+    //     await ctx.reply('Привет, ' + ctx.from.first_name + '!', {
+    //         ...Markup.inlineKeyboard([Markup.button.callback('Заполнить анкету', 'currency')]),
+    //     });
+    // });
+
+    // bot.action('currency', async (ctx) => {
+    //     const data = await fetch(url).then((data) => data.json());
+    //     await addToDatabase(databaseId, String(ctx.from?.id), Date.now());
+    //     await ctx.reply(convertToText(filterData(data[1].marketdata)).join('\n'), {
+    //         ...Markup.inlineKeyboard([Markup.button.callback('Обновить курс валют', 'currency')]),
+    //     });
+    // });
 });
 
 app.get('/', (req, res) => {
