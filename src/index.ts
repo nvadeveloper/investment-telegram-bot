@@ -11,7 +11,7 @@ const databaseId = process.env.NOTION_DATABASE_ID;
 const token: string = process.env.BOT_TOKEN ?? '';
 const port: string = process.env.PORT ?? '';
 const url: string = process.env.URL ?? '';
-const bot = new Telegraf<Context<any>>(token);
+const bot = new Telegraf<Context>(token);
 
 const startWizardScene = new Composer<Scenes.WizardContext>();
 const nameWizardScene = new Composer<Scenes.WizardContext>();
