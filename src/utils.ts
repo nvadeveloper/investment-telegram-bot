@@ -63,17 +63,3 @@ export function getCurrentDate() {
 //         console.error(error);
 //     }
 // }
-
-// bot.start(async (ctx) => {
-//     await ctx.reply('Привет, ' + ctx.from.first_name + '!', {
-//         ...Markup.inlineKeyboard([Markup.button.callback('Заполнить анкету', 'currency')]),
-//     });
-// });
-
-// bot.action('currency', async (ctx) => {
-//     const data = await fetch(url).then((data) => data.json());
-//     await addToDatabase(databaseId, String(ctx.from?.id), Date.now());
-//     await ctx.reply(convertToText(filterData(data[1].marketdata)).join('\n'), {
-//         ...Markup.inlineKeyboard([Markup.button.callback('Обновить курс валют', 'currency')]),
-//     });
-// });

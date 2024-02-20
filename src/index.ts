@@ -1,7 +1,6 @@
 import { type Context, Markup, Telegraf, Telegram, Scenes, Composer, session } from 'telegraf';
 import express from 'express';
 import * as dotenv from 'dotenv';
-import { СurrencyBackendType, СurrencyType } from './types';
 import { Client } from '@notionhq/client';
 import { getCurrentDate } from './utils';
 dotenv.config();
@@ -48,7 +47,7 @@ const menuScene = new Scenes.WizardScene(
     emailWizardScene,
     phoneWizardScene,
 );
-const stage = new Scenes.Stage([menuScene] as any);
+const stage = new Scenes.Stage([menuScene]);
 
 const app = express();
 
